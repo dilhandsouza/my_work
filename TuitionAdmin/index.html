@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuition Class Administration</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Drive API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-container active">
+        <div class="login-box">
+            <h1>🎓 Tuition Administration</h1>
+            <p class="subtitle">Secure Login Portal</p>
+            <p style="color: #999; font-size: 0.9em; margin-bottom: 20px;">Role is automatically detected based on your username</p>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUsername">Username/Email:</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+
+            <div class="demo-credentials">
+                <p><strong>Default Credentials:</strong></p>
+                <p>Admin: admin / admin123</p>
+                <p>Teacher: teacher1 / teach123</p>
+                <p>Student: student1 / stud123</p>
+                <p style="margin-top: 10px; font-size: 0.8em; color: #999;">You'll be prompted to change your password on first login</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSWORD CHANGE MODAL -->
+    <div id="passwordChangeModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modalTitle">Change Your Password</h2>
+            <p class="modal-subtitle" id="modalSubtitle">This is your first login. Please change your password.</p>
+            
+            <form id="passwordChangeForm" onsubmit="handlePasswordChange(event)">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password:</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password:</label>
+                    <input type="password" id="newPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" required minlength="6">
+                </div>
+                <p class="password-hint">Password must be at least 6 characters long</p>
+                <button type="submit" class="btn-submit">Update Password</button>
+                <button type="button" id="skipPasswordBtn" class="btn-skip" onclick="skipPasswordChange()" style="display:none;">Skip for Now</button>
+                <button type="button" id="cancelPasswordBtn" class="btn-skip" onclick="closePasswordChangeDialog()" style="display:none;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div id="paymentModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <h2>Record Payment</h2>
+            <p class="modal-subtitle">Enter the payment amount below</p>
+            
+            <form id="paymentForm" onsubmit="handlePayment(event)">
+                <div class="form-group">
+                    <label for="paymentAmount">Payment Amount (₹):</label>
+                    <input type="number" id="paymentAmount" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentDate">Payment Date:</label>
+                    <input type="date" id="paymentDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method:</label>
+                    <select id="paymentMethod" required>
+                        <option value="">-- Select Method --</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Check">Check</option>
+                        <option value="Online">Online Transfer</option>
+                        <option value="Card">Card</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Submit Payment</button>
+                <button type="button" class="btn-skip" onclick="closePaymentModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION -->
+    <div id="mainApp" class="main-app">
+        <div class="container">
+        <header>
+            <h1>📚 Tuition Class Administration</h1>
+            <div class="header-right">
+                <span id="userInfo"></span>
+                <button class="btn-change-pwd" onclick="openPasswordChangeDialog()">🔐 Change Password</button>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- ADMIN PANEL -->
+        <div id="adminPanel" class="role-panel">
+            <nav class="tabs">
+                <button class="tab-button active" onclick="showTab('students')">Students</button>
+                <button class="tab-button" onclick="showTab('teachers')">Teachers</button>
+                <button class="tab-button" onclick="showTab('admins')">Admin Accounts</button>
+                <button class="tab-button" onclick="showTab('backup')">Backup & Sync</button>
+            </nav>
+
+            <!-- STUDENTS SECTION -->
+            <section id="students-tab" class="tab-content active">
+                <div class="content-wrapper">
+                    <div class="form-section">
+                        <h2>Add New Student</h2>
+                        <form id="studentForm" onsubmit="addStudent(event)">
+                            <div class="form-group">
+                                <label for="studentName">Name:</label>
+                                <input type="text" id="studentName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentRoll">Roll Number:</label>
+                                <input type="text" id="studentRoll" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentEmail">Email:</label>
+                                <input type="email" id="studentEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentPhone">Phone:</label>
+                                <input type="tel" id="studentPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentClass">Class:</label>
+                                <input type="text" id="studentClass" placeholder="e.g., 10-A" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentFees">Monthly Fees:</label>
+                                <input type="number" id="studentFees" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentFeesPaid">Fees Already Paid:</label>
+                                <input type="number" id="studentFeesPaid" step="0.01" value="0" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentDueDate">Due Date for Next Payment:</label>
+                                <input type="date" id="studentDueDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentUsername">Username:</label>
+                                <input type="text" id="studentUsername" placeholder="For login" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentPassword">Password:</label>
+                                <input type="password" id="studentPassword" placeholder="For login" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentStatus">Status:</label>
+                                <select id="studentStatus" required>
+                                    <option value="">-- Select Status --</option>
+                                    <option value="Active" selected>Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                    <option value="On Leave">On Leave</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-submit">Add Student</button>
+                        </form>
+                    </div>
+
+                    <div class="display-section">
+                        <h2>Students List</h2>
+                        <div class="search-bar">
+                            <input type="text" id="studentSearch" placeholder="Search by name or roll number..." onkeyup="filterStudents()">
+                        </div>
+                        <table id="studentTable" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Roll No.</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Class</th>
+                                    <th>Total Fees</th>
+                                    <th>Paid</th>
+                                    <th>Pending</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ADMIN ACCOUNTS SECTION -->
+            <section id="admins-tab" class="tab-content">
+                <div class="content-wrapper">
+                    <div class="form-section">
+                        <h2>Create New Admin Account</h2>
+                        <form id="adminForm" onsubmit="addAdmin(event)">
+                            <div class="form-group">
+                                <label for="adminName">Full Name:</label>
+                                <input type="text" id="adminName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminUsername">Username:</label>
+                                <input type="text" id="adminUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminPassword">Password:</label>
+                                <input type="password" id="adminPassword" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="adminEmail">Email (Optional):</label>
+                                <input type="email" id="adminEmail">
+                            </div>
+                            <button type="submit" class="btn-submit">Create Admin</button>
+                        </form>
+                    </div>
+
+                    <div class="display-section">
+                        <h2>Admin Accounts</h2>
+                        <table id="adminTable" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BACKUP & SYNC SECTION -->
+            <section id="backup-tab" class="tab-content">
+                <div class="backup-container">
+                    <div class="backup-section">
+                        <h2>☁️ Google Drive Backup & Sync</h2>
+                        <div id="driveStatus" class="status-box not-connected">
+                            <p><strong>Status:</strong> <span id="statusText">Not Connected</span></p>
+                            <p id="connectedUser" style="display:none;"><strong>Connected As:</strong> <span id="userEmail"></span></p>
+                            <p id="lastSync" style="display:none;"><strong>Last Sync:</strong> <span id="syncTime"></span></p>
+                        </div>
+
+                        <div class="button-group">
+                            <button id="connectDriveBtn" class="btn-primary" onclick="initGoogleDrive()">
+                                🔗 Connect Google Drive
+                            </button>
+                            <button id="disconnectDriveBtn" class="btn-secondary" onclick="disconnectGoogleDrive()" style="display:none;">
+                                ✕ Disconnect
+                            </button>
+                        </div>
+
+                        <div class="backup-actions">
+                            <button id="backupBtn" class="btn-backup" onclick="backupToGoogleDrive()" disabled>
+                                💾 Backup to Google Drive
+                            </button>
+                            <button id="restoreBtn" class="btn-restore" onclick="restoreFromGoogleDrive()" disabled>
+                                📥 Restore from Google Drive
+                            </button>
+                            <button class="btn-download" onclick="downloadLocalBackup()">
+                                ⬇️ Download Local Backup
+                            </button>
+                        </div>
+
+                        <div class="backup-info">
+                            <h3>ℹ️ How It Works</h3>
+                            <ul>
+                                <li><strong>Connect:</strong> Admin connects their Google Drive account (one-time setup)</li>
+                                <li><strong>Backup:</strong> Click "Backup" to save all data to your Google Drive</li>
+                                <li><strong>Restore:</strong> Login from another device and restore to get all data</li>
+                                <li><strong>Auto-sync:</strong> Data is synced automatically when you login/logout</li>
+                                <li><strong>Secure:</strong> Only admin can connect/disconnect. Students/Teachers unaffected</li>
+                            </ul>
+                        </div>
+
+                        <div class="setup-instructions">
+                            <h3>🔧 Setup Instructions</h3>
+                            <ol>
+                                <li>Go to <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a></li>
+                                <li>Create a new project or select existing one</li>
+                                <li>Enable "Google Drive API"</li>
+                                <li>Go to "OAuth consent screen" and create OAuth 2.0 credentials (Desktop app)</li>
+                                <li>Copy your <strong>Client ID</strong> from credentials</li>
+                                <li>Click "Setup Google Drive" below and paste your Client ID</li>
+                            </ol>
+                        </div>
+
+                        <div class="setup-form">
+                            <h3>⚙️ Setup Google Drive</h3>
+                            <div class="form-group">
+                                <label for="clientId">Google Cloud Client ID:</label>
+                                <input type="text" id="clientId" placeholder="Paste your OAuth 2.0 Client ID here">
+                                <small>Get it from: Google Cloud Console → Credentials → OAuth 2.0 Client IDs</small>
+                            </div>
+                            <button class="btn-setup" onclick="setupGoogleDriveConfig()">Save Client ID</button>
+                            <p id="setupStatus"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TEACHERS SECTION -->
+            <section id="teachers-tab" class="tab-content">
+                <div class="content-wrapper">
+                    <div class="form-section">
+                        <h2>Add New Teacher</h2>
+                        <form id="teacherForm" onsubmit="addTeacher(event)">
+                            <div class="form-group">
+                                <label for="teacherName">Name:</label>
+                                <input type="text" id="teacherName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherEmail">Email:</label>
+                                <input type="email" id="teacherEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherPhone">Phone:</label>
+                                <input type="tel" id="teacherPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherSubject">Subject:</label>
+                                <input type="text" id="teacherSubject" placeholder="e.g., Mathematics" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherQualification">Qualification:</label>
+                                <input type="text" id="teacherQualification" placeholder="e.g., B.Sc, M.Tech" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherExperience">Experience (Years):</label>
+                                <input type="number" id="teacherExperience" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherSalary">Monthly Salary:</label>
+                                <input type="number" id="teacherSalary" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherUsername">Username:</label>
+                                <input type="text" id="teacherUsername" placeholder="For login" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherPassword">Password:</label>
+                                <input type="password" id="teacherPassword" placeholder="For login" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherStatus">Status:</label>
+                                <select id="teacherStatus" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                    <option value="On Leave">On Leave</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-submit">Add Teacher</button>
+                        </form>
+                    </div>
+
+                    <div class="display-section">
+                        <h2>Teachers List</h2>
+                        <div class="search-bar">
+                            <input type="text" id="teacherSearch" placeholder="Search by name or subject..." onkeyup="filterTeachers()">
+                        </div>
+                        <table id="teacherTable" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Subject</th>
+                                    <th>Qualification</th>
+                                    <th>Experience</th>
+                                    <th>Salary</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- TEACHER PANEL -->
+        <div id="teacherPanel" class="role-panel">
+            <div class="teacher-dashboard">
+                <h2>Welcome, <span id="teacherName"></span>!</h2>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>My Information</h3>
+                        <div id="teacherInfo" class="info-display"></div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>My Students</h3>
+                        <div class="search-bar">
+                            <input type="text" id="teacherStudentSearch" placeholder="Search students..." onkeyup="filterTeacherStudents()">
+                        </div>
+                        <table class="data-table small-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Roll No.</th>
+                                    <th>Class</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherStudentTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDENT PANEL -->
+        <div id="studentPanel" class="role-panel">
+            <div class="student-dashboard">
+                <h2>Welcome, <span id="studentName"></span>!</h2>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>My Profile</h3>
+                        <div id="studentInfo" class="info-display"></div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Class Information</h3>
+                        <div id="studentClassInfo" class="info-display"></div>
+                    </div>
+                    
+                    <div class="dashboard-card fees-card">
+                        <h3>💰 Fees Status</h3>
+                        <div id="feesStatus" class="fees-display"></div>
+                        <button id="paymentBtn" class="btn-primary" onclick="openPaymentModal()" style="margin-top: 15px;">📝 Record Payment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

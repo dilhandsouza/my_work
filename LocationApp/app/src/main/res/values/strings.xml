@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Location App</string>
+    <string name="get_location">Get Current Location</string>
+    <string name="latitude_placeholder">Latitude: --</string>
+    <string name="longitude_placeholder">Longitude: --</string>
+    <string name="address_placeholder">Address: --</string>
+</resources>
