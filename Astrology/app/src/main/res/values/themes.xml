@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.Astrology" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">#5B2A86</item>
+        <item name="colorPrimaryVariant">#3E1A5E</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#E0A526</item>
+    </style>
+</resources>

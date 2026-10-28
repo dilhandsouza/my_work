@@ -127,7 +127,7 @@ def main() -> None:
 
     with left:
         st.subheader("Model Comparison")
-        st.dataframe(comparison_df.style.format("{:.4f}"), use_container_width=True)
+        st.dataframe(comparison_df.style.format("{:.4f}"), width="stretch")
 
         st.subheader(f"Selected Model: {selected_model}")
         render_metric_cards(summary["models"][selected_model])
@@ -135,7 +135,7 @@ def main() -> None:
 
     with right:
         st.subheader("Uploaded Test Data")
-        st.dataframe(test_df.head(10), use_container_width=True)
+        st.dataframe(test_df.head(10), width="stretch")
 
     model = load_model(selected_model)
     predictions = model.predict(x_test)
@@ -150,7 +150,7 @@ def main() -> None:
     predictions_df = test_df.copy()
     predictions_df["prediction"] = predictions
     st.subheader("Prediction Preview")
-    st.dataframe(predictions_df.head(15), use_container_width=True)
+    st.dataframe(predictions_df.head(15), width="stretch")
 
 
 if __name__ == "__main__":

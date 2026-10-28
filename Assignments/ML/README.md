@@ -7,7 +7,8 @@ Build, evaluate, and deploy multiple classification models on one public dataset
 This solution uses the Breast Cancer Wisconsin Diagnostic dataset from the UCI Machine Learning Repository, accessed through scikit-learn. It is a binary classification problem with 569 instances and 30 numerical features, which satisfies the assignment constraints of at least 500 instances and at least 12 features. The target classes represent malignant and benign tumors.
 
 ## Github Repository Link
-Repository: https://github.com/dilhandsouza/my_work
+Repository: 
+
 
 Project folder: Assignments/ML
 
@@ -70,8 +71,10 @@ Assignments/ML/
 ## Run locally
 ```bash
 python model/train_models.py
-streamlit run app.py
+python -m streamlit run app.py
 ```
+
+If `streamlit` is not recognized in Command Prompt, use `python -m streamlit run app.py` instead of calling the `streamlit` executable directly.
 
 ## Submission notes
 1. `test_data.csv` is generated from the held-out test split and is ready for Streamlit upload.
