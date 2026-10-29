@@ -1,5 +1,9 @@
 <resources>
-    <style name="Theme.Astrology" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Astrology" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/page_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textColorPrimary">#1B1B1B</item>
+        <item name="android:textColorSecondary">#444444</item>
         <item name="colorPrimary">#5B2A86</item>
         <item name="colorPrimaryVariant">#3E1A5E</item>
         <item name="colorOnPrimary">#FFFFFF</item>

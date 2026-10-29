@@ -51,3 +51,18 @@ classical minimum (Sun 6.5, Moon 6, Mars 5, Mercury 7, Jupiter 6.5, Venus 5.5, S
 - Shadbala vs PyJHora: see [SHADBALA_VERIFICATION.md](SHADBALA_VERIFICATION.md).
 - Positions vs JPL Horizons and Panchang: `verify/verify.py`, `verify/verify_extra.py`.
 - Limitations: see [README.md](README.md).
+
+## Google Play (AAB) build
+
+Requires JDK 17, Android SDK platform 36 + build-tools 36.0.0, and Gradle 8.11.1 (AGP 8.10.1).
+
+    gradle bundleRelease      # app\build\outputs\bundle\release\app-release.aab
+    gradle assembleRelease    # sideload APK
+
+Play checklist (you must do these yourself):
+1. Create a developer account at https://play.google.com/console ($25 one-time, identity verification).
+2. The package name is `elendor.vedicastrology`. It cannot be changed after the first upload.
+3. Enrol in Play App Signing. `release.keystore` is your upload key; back it up with `keystore.properties`.
+4. Prepare a 512x512 icon, 1024x500 feature graphic, screenshots, a privacy policy URL, the Data safety form (the app sends the text typed in the birth-place field to the Open-Meteo geocoding API, geocoding-api.open-meteo.com; no account or key is used) and the content rating.
+5. New personal accounts must run a closed test with 12+ testers for 14 days before production. Confirm this in the console.
+6. Raise `versionCode` for every upload. New apps and updates must target API 36 from 31 Aug 2026 (already done).

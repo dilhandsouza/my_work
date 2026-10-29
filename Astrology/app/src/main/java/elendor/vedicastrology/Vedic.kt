@@ -1,4 +1,4 @@
-package com.example.astrology
+package elendor.vedicastrology
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -34,7 +34,7 @@ object Vedic {
     fun housesOwned(k: Kundli, planet: String): List<Int> = (1..12).filter { lordOfHouse(k, it) == planet }
 
     private fun time(ms: Long?, tz: TimeZone): String {
-        if (ms == null) return "n/a"
+        if (ms == null) return Lang.t("n/a")
         val f = SimpleDateFormat("HH:mm", Locale.getDefault())
         f.timeZone = tz
         return f.format(Date(ms))
@@ -61,27 +61,33 @@ object Vedic {
         if (sunrise != null && birthMillis < sunrise) dow = if (dow == 1) 7 else dow - 1
         val nakLord = DASHA_ORDER[moon.nakshatra % 9]
         return buildString {
-            append("Vara (weekday): ${VARAS[dow - 1]}\n")
-            append("Tithi: $paksha $tithiName\n")
-            append("Nakshatra: ${NAKSHATRAS[moon.nakshatra]}, pada ${moon.pada} (lord $nakLord)\n")
-            append("Yoga: $yoga\n")
-            append("Karana: $karana\n")
-            append("Moon sign (Rashi): ${SIGNS[moon.sign]} (lord ${SIGN_LORDS[moon.sign]})\n")
-            append("Sunrise ${time(sunrise, tz)}, sunset ${time(sunset, tz)} (local)\n")
-            append("The Vedic day starts at sunrise, so births before sunrise belong to the previous weekday.")
+            append(Lang.t("Vara (weekday): %s\n", Lang.t(VARAS[dow - 1])))
+            append(Lang.t("Tithi: %s %s\n", Lang.t(paksha), Lang.t(tithiName)))
+            append(Lang.t("Nakshatra: %s, pada %d (lord %s)\n", Lang.nak(moon.nakshatra), moon.pada, Lang.planet(nakLord)))
+            append(Lang.t("Yoga: %s\n", Lang.t(yoga)))
+            append(Lang.t("Karana: %s\n", Lang.t(karana)))
+            append(Lang.t("Moon sign (Rashi): %s (lord %s)\n", Lang.sign(moon.sign), Lang.planet(SIGN_LORDS[moon.sign])))
+            append(Lang.t("Sunrise %s, sunset %s (local)\n", time(sunrise, tz), time(sunset, tz)))
+            append(Lang.t("The Vedic day starts at sunrise, so births before sunrise belong to the previous weekday."))
         }
     }
 
     fun navamsaPlacements(k: Kundli): List<Pair<String, Int>> = k.planets.map { it.name to navamsaSign(it.lon) }
 
     fun navamsaText(k: Kundli): String = buildString {
-        append("Navamsa (D9) Lagna: ${SIGNS[navamsaSign(k.ascendant)]}\n")
+        append(Lang.t("Navamsa (D9) Lagna: %s\n", Lang.sign(navamsaSign(k.ascendant))))
         for (p in k.planets) {
             val n = navamsaSign(p.lon)
-            append("%-8s D9 %-12s%s\n".format(p.name, SIGNS[n], if (n == p.sign) "  Vargottama" else ""))
+            append(Lang.t(
+                "%sD9 %s%s\n",
+                Lang.pad(Lang.planet(p.name), 9), Lang.pad(Lang.sign(n), 12),
+                if (n == p.sign) Lang.t("  Vargottama") else ""
+            ))
         }
-        append("\nThe Navamsa shows the inner strength of planets and the quality of marriage and dharma. ")
-        append("Vargottama planets (same sign in D1 and D9) give strong, stable results.")
+        append("\n")
+        append(Lang.t("The Navamsa shows the inner strength of planets and the quality of marriage and dharma."))
+        append(" ")
+        append(Lang.t("Vargottama planets (same sign in D1 and D9) give strong, stable results."))
     }
 
     fun moonPlacements(k: Kundli): List<Pair<String, Int>> = k.planets.map { it.name to it.sign }
@@ -92,8 +98,12 @@ object Vedic {
             val lord = SIGN_LORDS[sign]
             val lh = k.houseOf(k.planet(lord))
             val occ = k.planets.filter { k.houseOf(it) == h }.joinToString(", ") { it.name }
-            append("H%-2d %-12s lord %-8s in H%-2d  %s\n".format(h, SIGNS[sign], lord, lh, if (occ.isEmpty()) "-" else occ))
-            append("     ${Insights.houseMeaning[h - 1]}\n")
+            append(Lang.t(
+                "H%-2d %slord %sin H%-2d  %s\n",
+                h, Lang.pad(Lang.sign(sign), 13), Lang.pad(Lang.planet(lord), 9), lh,
+                if (occ.isEmpty()) "-" else occ.split(", ").joinToString(", ") { Lang.planet(it) }
+            ))
+            append(Lang.t("     %s\n", Lang.t(Insights.houseMeaning[h - 1])))
         }
     }
 
@@ -110,10 +120,10 @@ object Vedic {
             val h = k.houseOf(p)
             val targets = aspectOffsets(p.name).map { (h - 1 + it - 1) % 12 + 1 }
             val desc = targets.joinToString("; ") { th ->
-                val occ = k.planets.filter { it.name != p.name && k.houseOf(it) == th }.map { it.name }
-                "H$th" + if (occ.isEmpty()) "" else " (${occ.joinToString(",")})"
+                val occ = k.planets.filter { it.name != p.name && k.houseOf(it) == th }.map { Lang.planet(it.name) }
+                Lang.t("H%d", th) + if (occ.isEmpty()) "" else Lang.t(" (%s)", occ.joinToString(","))
             }
-            append("${p.name} (H$h) aspects $desc\n")
+            append(Lang.t("%s (H%d) aspects %s\n", Lang.planet(p.name), h, desc))
         }
     }
 
@@ -131,11 +141,17 @@ object Vedic {
                 n == "Venus" && p.retrograde -> 8.0
                 else -> orb
             }
-            if (d < lim) lines += "$n is combust (%.1f° from the Sun): its significations are weakened or overshadowed by ego/authority themes.".format(d)
+            if (d < lim) lines += Lang.t(
+                "%s is combust (%.1f° from the Sun): its significations are weakened or overshadowed by ego/authority themes.",
+                Lang.planet(n), d
+            )
         }
         val retro = k.planets.filter { it.retrograde && it.name != "Rahu" && it.name != "Ketu" }.map { it.name }
-        if (retro.isNotEmpty()) lines += "Retrograde (Vakri) at birth: ${retro.joinToString(", ")} – intensified, internalised or delayed results of these planets."
-        return if (lines.isEmpty()) "No combust or retrograde planets." else lines.joinToString("\n\n")
+        if (retro.isNotEmpty()) lines += Lang.t(
+            "Retrograde (Vakri) at birth: %s – intensified, internalised or delayed results of these planets.",
+            retro.joinToString(", ") { Lang.planet(it) }
+        )
+        return if (lines.isEmpty()) Lang.t("No combust or retrograde planets.") else lines.joinToString("\n\n")
     }
 
     fun extraYogas(k: Kundli): String {
@@ -148,18 +164,27 @@ object Vedic {
             val b = lordOfHouse(k, th)
             if (a == b || !seen.add(listOf(a, b).sorted().joinToString())) continue
             if (k.planet(a).sign == k.planet(b).sign) {
-                out += "Raja Yoga: lords of house $kh ($a) and house $th ($b) are together in ${SIGNS[k.planet(a).sign]} – rise in status, authority and recognition."
+                out += Lang.t(
+                    "Raja Yoga: lords of house %d (%s) and house %d (%s) are together in %s – rise in status, authority and recognition.",
+                    kh, Lang.planet(a), th, Lang.planet(b), Lang.sign(k.planet(a).sign)
+                )
             }
         }
         val l2 = lordOfHouse(k, 2)
         val l11 = lordOfHouse(k, 11)
         if (l2 != l11 && k.planet(l2).sign == k.planet(l11).sign) {
-            out += "Dhana Yoga: lords of the 2nd ($l2) and 11th ($l11) are together – good potential for wealth and gains."
+            out += Lang.t(
+                "Dhana Yoga: lords of the 2nd (%s) and 11th (%s) are together – good potential for wealth and gains.",
+                Lang.planet(l2), Lang.planet(l11)
+            )
         }
         for (dh in listOf(6, 8, 12)) {
             val l = lordOfHouse(k, dh)
             if (k.houseOf(k.planet(l)) in listOf(6, 8, 12)) {
-                out += "Viparita Raja Yoga: lord of house $dh ($l) sits in a dusthana – success after initial difficulties and reversals."
+                out += Lang.t(
+                    "Viparita Raja Yoga: lord of house %d (%s) sits in a dusthana – success after initial difficulties and reversals.",
+                    dh, Lang.planet(l)
+                )
             }
         }
         val moon = k.planet("Moon")
@@ -168,7 +193,7 @@ object Vedic {
             it.name !in listOf("Sun", "Moon", "Rahu", "Ketu") &&
                 (k.houseOf(it) == mh || (k.houseOf(it) - mh + 12) % 12 in listOf(1, 11))
         }
-        if (around.isEmpty()) out += "Kemadruma Yoga: no planet near the Moon – periods of emotional solitude; strong support systems and routine help."
+        if (around.isEmpty()) out += Lang.t("Kemadruma Yoga: no planet near the Moon – periods of emotional solitude; strong support systems and routine help.")
         return if (out.isEmpty()) "" else out.joinToString("\n\n")
     }
 }

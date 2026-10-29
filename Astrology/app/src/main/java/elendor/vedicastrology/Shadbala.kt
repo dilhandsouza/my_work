@@ -1,4 +1,4 @@
-package com.example.astrology
+package elendor.vedicastrology
 
 import kotlin.math.abs
 import kotlin.math.asin
@@ -33,11 +33,11 @@ object Shadbala {
     ) {
         val ratio: Double get() = total / required
         fun rating(): String = when {
-            ratio >= 1.5 -> "Excellent"
-            ratio >= 1.15 -> "Strong"
-            ratio >= 1.0 -> "Adequate"
-            ratio >= 0.8 -> "Weak"
-            else -> "Very Weak"
+            ratio >= 1.5 -> Lang.t("Excellent")
+            ratio >= 1.15 -> Lang.t("Strong")
+            ratio >= 1.0 -> Lang.t("Adequate")
+            ratio >= 0.8 -> Lang.t("Weak")
+            else -> Lang.t("Very Weak")
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.astrology
+package elendor.vedicastrology
 
 import java.util.TimeZone
 import org.junit.Assert.assertEquals

@@ -1,4 +1,4 @@
-package com.example.astrology
+package elendor.vedicastrology
 
 /**
  * Gochar (transit) results from the natal Moon with Vedha, per Phaladeepika / Brihat Samhita.
@@ -34,12 +34,12 @@ object Gochar {
             val h = houses.getValue(p.name)
             val table = VEDHA[p.name]
             if (table == null) {
-                out[p.name] = Strength(if (h in NODE_FAVOURABLE) "Strong" else "Neutral", null)
+                out[p.name] = Strength(Lang.t(if (h in NODE_FAVOURABLE) "Strong" else "Neutral"), null)
                 continue
             }
             val vedhaHouse = table[h]
             if (vedhaHouse == null) {
-                out[p.name] = Strength(if (h in listOf(6, 8, 12)) "Challenging" else "Unfavourable", null)
+                out[p.name] = Strength(Lang.t(if (h in listOf(6, 8, 12)) "Challenging" else "Unfavourable"), null)
                 continue
             }
             val blocker = transit.firstOrNull {
@@ -47,8 +47,8 @@ object Gochar {
                     setOf(it.name, p.name) !in EXEMPT
             }
             out[p.name] = if (blocker != null) {
-                Strength("Obstructed", "house $h blocked by ${blocker.name} in house $vedhaHouse")
-            } else Strength("Strong", null)
+                Strength(Lang.t("Obstructed"), Lang.t("house %d blocked by %s in house %d", h, Lang.planet(blocker.name), vedhaHouse))
+            } else Strength(Lang.t("Strong"), null)
         }
         return out
     }

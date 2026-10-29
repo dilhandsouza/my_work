@@ -1,4 +1,4 @@
-package com.example.astrology
+﻿package elendor.vedicastrology
 
 /**
  * Detailed readings: planet, house, nakshatra, life-area, and dasha narratives.
@@ -43,16 +43,16 @@ object Readings {
             else -> "Neutral"
         }
 
-        sb.append("${p.name} in $sign (${String.format("%.1f", p.degInSign)}°) / Nakshatra $nk\n")
-        sb.append("Dignity: $dignity | Shadbala: $strength | Retrograde: ${p.retrograde}\n")
+        sb.append(Lang.t("%1\$s in %2\$s (%3\$.1f\u00b0) / Nakshatra %4\$s\n", Lang.planet(p.name), Lang.sign(p.sign), p.degInSign, Lang.nak(p.nakshatra)))
+        sb.append(Lang.t("Dignity: %1\$s | Shadbala: %2\$s | Retrograde: %3\$s\n", Lang.t(dignity), Lang.t(strength), Lang.t(p.retrograde.toString())))
         if (sb_result != null) {
-            sb.append("Strength breakdown: Sthana=${sb_result.sthana} Dig=${sb_result.dig} Kala=${sb_result.kala} ")
-            sb.append("Cheshta=${sb_result.cheshta} Naisargika=${sb_result.naisargika} Drik=${sb_result.drik}\n")
+            sb.append(Lang.t("Strength breakdown: Sthana=%1\$s Dig=%2\$s Kala=%3\$s ", sb_result.sthana, sb_result.dig, sb_result.kala))
+            sb.append(Lang.t("Cheshta=%1\$s Naisargika=%2\$s Drik=%3\$s\n", sb_result.cheshta, sb_result.naisargika, sb_result.drik))
         }
 
         val h = k.houseOf(p)
         val lordName = SIGN_LORDS[p.sign]
-        sb.append("House: ${h} | Sign Lord: $lordName\n")
+        sb.append(Lang.t("House: %1\$d | Sign Lord: %2\$s\n", h, Lang.planet(lordName.orEmpty())))
 
         return sb.toString()
     }
@@ -70,15 +70,15 @@ object Readings {
                 lord.sign == Insights.debil[lord.name] -> "debilitated"
                 else -> "neutral"
             }
-            sb.append("House $h: $theme | Lord ${lord.name} in ${SIGN_NAMES[lord.sign]} ($lordDig)\n")
+            sb.append(Lang.t("House %1\$d: %2\$s | Lord %3\$s in %4\$s (%5\$s)\n", h, Lang.t(theme ?: ""), Lang.planet(lord.name), Lang.sign(lord.sign), Lang.t(lordDig)))
         } else {
-            sb.append("House $h: $theme\n")
+            sb.append(Lang.t("House %1\$d: %2\$s\n", h, Lang.t(theme ?: "")))
         }
 
         val transit = AstroEngine.siderealAt(now)
         val transiting = transit.filter { k.houseOf(it) == h }
         if (transiting.isNotEmpty()) {
-            sb.append("Current transits: ${transiting.joinToString(", ") { it.name }}\n")
+            sb.append(Lang.t("Current transits: %s\n", transiting.joinToString(", ") { Lang.planet(it.name) }))
         }
 
         return sb.toString()
@@ -97,14 +97,14 @@ object Readings {
         }
 
         val sb = StringBuilder()
-        sb.append("$area ($theme):\n")
+        sb.append(Lang.t("%1\$s (%2\$s):\n", Lang.t(area), Lang.t(theme)))
 
         val lordSign = (k.lagnaSign + h - 1) % 12
         val lordName = SIGN_LORDS[lordSign]
         val houseDiv = k.planets.firstOrNull { it.name == lordName }
         if (houseDiv != null) {
             val strength = shadbala[houseDiv.name]?.rating() ?: "Unknown"
-            sb.append("House $h lord (${houseDiv.name} in ${SIGN_NAMES[houseDiv.sign]}): $strength\n")
+            sb.append(Lang.t("House %1\$d lord (%2\$s in %3\$s): %4\$s\n", h, Lang.planet(houseDiv.name), Lang.sign(houseDiv.sign), Lang.t(strength)))
         }
 
         val transit = AstroEngine.siderealAt(now)
@@ -114,10 +114,10 @@ object Readings {
         val favorable = inHouse.filter { it.name in benefics }
         val unfavorable = inHouse.filter { it.name in malefics }
 
-        if (favorable.isNotEmpty()) sb.append("Favorable transits: ${favorable.joinToString(", ") { it.name }}\n")
-        if (unfavorable.isNotEmpty()) sb.append("Challenging transits: ${unfavorable.joinToString(", ") { it.name }}\n")
+        if (favorable.isNotEmpty()) sb.append(Lang.t("Favorable transits: %s\n", favorable.joinToString(", ") { Lang.planet(it.name) }))
+        if (unfavorable.isNotEmpty()) sb.append(Lang.t("Challenging transits: %s\n", unfavorable.joinToString(", ") { Lang.planet(it.name) }))
 
-        if (inHouse.isEmpty()) sb.append("Overall: No major transits in this house currently.\n")
+        if (inHouse.isEmpty()) sb.append(Lang.t("Overall: No major transits in this house currently.\n"))
 
         return sb.toString()
     }
@@ -125,19 +125,25 @@ object Readings {
     fun dashaReading(dasha: String, k: Kundli, start: Long, end: Long): String {
         val sb = StringBuilder()
         val starty = (start - System.currentTimeMillis()) / (365.25 * 24 * 3600 * 1000)
-
-        sb.append("$dasha: ${if (starty < 0) "ended ${-starty.toInt()} years ago" else "starts in ${starty.toInt()} years"}")
-        sb.append(" (${String.format("%.1f", (end-start)/(365.25*24*3600*1000))} year duration)\n")
+        val duration = String.format("%.1f", (end-start)/(365.25*24*3600*1000))
+        val timing = if (starty < 0) Lang.t("ended %d years ago", -starty.toInt()) else Lang.t("starts in %d years", starty.toInt())
 
         val planet = dasha.split(" ")[0]
+        var dashaLabel = dasha
+        for (name in listOf("Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu")) {
+            dashaLabel = dashaLabel.replace(name, Lang.planet(name))
+        }
+        dashaLabel = dashaLabel.replace("Mahadasha", Lang.t("Mahadasha"))
+            .replace("Antardasha", Lang.t("Antardasha"))
+        sb.append(Lang.t("%1\$s: %2\$s (%3\$s year duration)\n", dashaLabel, timing, duration))
         val p = k.planets.firstOrNull { it.name == planet }
         if (p != null) {
             val dign = when {
-                p.sign == Insights.exalt[p.name] -> "exalted → favorable growth"
-                p.sign == Insights.debil[p.name] -> "debilitated → challenges to overcome"
-                else -> "neutral → steady progress"
+                p.sign == Insights.exalt[p.name] -> "exalted \u2192 favorable growth"
+                p.sign == Insights.debil[p.name] -> "debilitated \u2192 challenges to overcome"
+                else -> "neutral \u2192 steady progress"
             }
-            sb.append("$planet is $dign in your chart.\n")
+            sb.append(Lang.t("%1\$s is %2\$s in your chart.\n", Lang.planet(planet), Lang.t(dign)))
         }
 
         val theme = when (planet) {
@@ -152,8 +158,9 @@ object Readings {
             "Ketu" -> "liberation, spirituality, loss"
             else -> "unknown"
         }
-        sb.append("Focus: $theme\n")
-        sb.append("Remedies: chant ${planet.uppercase()} mantra, donate its metal, fast on its day\n")
+        sb.append(Lang.t("Focus: %s\n", Lang.t(theme)))
+        val mantraPlanet = if (planet in listOf("Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu")) Lang.planet(planet) else dashaLabel.substringBefore(" ")
+        sb.append(Lang.t("Remedies: chant %1\$s mantra, donate its metal, fast on its day\n", mantraPlanet.uppercase()))
 
         return sb.toString()
     }

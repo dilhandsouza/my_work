@@ -1,4 +1,4 @@
-package com.example.astrology
+package elendor.vedicastrology
 
 /**
  * Parashari Ashtakavarga. For each of the 7 planets, eight contributors (Sun..Saturn and Lagna)

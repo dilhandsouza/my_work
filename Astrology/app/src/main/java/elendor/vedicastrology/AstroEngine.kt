@@ -1,4 +1,4 @@
-package com.example.astrology
+package elendor.vedicastrology
 
 import io.github.cosinekitty.astronomy.Aberration
 import io.github.cosinekitty.astronomy.Body

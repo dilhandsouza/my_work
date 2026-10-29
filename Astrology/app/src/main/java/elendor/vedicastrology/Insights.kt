@@ -1,4 +1,4 @@
-package com.example.astrology
+package elendor.vedicastrology
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -80,44 +80,57 @@ object Insights {
     }
 
     fun planetTable(k: Kundli): String = buildString {
-        append("Ascendant (Lagna): ${SIGNS[k.lagnaSign]} ${dms(k.ascendant % 30)}\n\n")
+        append(Lang.t("Ascendant (Lagna): %s %s\n\n", Lang.sign(k.lagnaSign), dms(k.ascendant % 30)))
         for (p in k.planets) {
             val dig = dignity(p)
-            append("%-8s %-12s %s  H%-2d  %s%s%s\n".format(
-                p.name, SIGNS[p.sign], dms(p.degInSign), k.houseOf(p),
-                NAKSHATRAS[p.nakshatra] + "-" + p.pada,
-                if (p.retrograde && p.name != "Rahu" && p.name != "Ketu") " (R)" else "",
-                if (dig.isEmpty()) "" else "  [$dig]"
+            append(Lang.t(
+                "%s%s%s  H%-2d  %s%s%s\n",
+                Lang.pad(Lang.planet(p.name), 9), Lang.pad(Lang.sign(p.sign), 13), dms(p.degInSign), k.houseOf(p),
+                Lang.t("%s-%d", Lang.nak(p.nakshatra), p.pada),
+                if (p.retrograde && p.name != "Rahu" && p.name != "Ketu") Lang.t(" (R)") else "",
+                if (dig.isEmpty()) "" else Lang.t("  [%s]", Lang.t(dig))
             ))
         }
-        append("\nAyanamsa (Lahiri): %.3f°".format(k.ayanamsa))
+        append("\n")
+        append(Lang.t("Ayanamsa (Lahiri): %.3f°", k.ayanamsa))
     }
 
     fun overview(k: Kundli): String {
         val moon = k.planet("Moon")
         val sun = k.planet("Sun")
         return buildString {
-            append("Ascendant – ${SIGNS[k.lagnaSign]} (lord ${SIGN_LORDS[k.lagnaSign]}):\n")
-            append(lagnaText[k.lagnaSign]).append("\n\n")
-            append("Moon sign (Rashi) – ${SIGNS[moon.sign]}, nakshatra ${NAKSHATRAS[moon.nakshatra]} pada ${moon.pada}: ")
-            append(moonText[moon.sign]).append(".\n\n")
-            append("Sun sign (sidereal) – ${SIGNS[sun.sign]}: your core identity expresses through the qualities of ${SIGNS[sun.sign]}.\n\n")
+            append(Lang.t("Ascendant – %s (lord %s):\n", Lang.sign(k.lagnaSign), Lang.planet(SIGN_LORDS[k.lagnaSign])))
+            append(Lang.t(lagnaText[k.lagnaSign])).append("\n\n")
+            append(Lang.t(
+                "Moon sign (Rashi) – %s, nakshatra %s pada %d: %s.\n\n",
+                Lang.sign(moon.sign), Lang.nak(moon.nakshatra), moon.pada, Lang.t(moonText[moon.sign])
+            ))
+            append(Lang.t(
+                "Sun sign (sidereal) – %s: your core identity expresses through the qualities of %s.\n\n",
+                Lang.sign(sun.sign), Lang.sign(sun.sign)
+            ))
             val lagnaLord = SIGN_LORDS[k.lagnaSign]
             val ll = k.planet(lagnaLord)
-            append("Lagna lord $lagnaLord sits in ${SIGNS[ll.sign]} in house ${k.houseOf(ll)} – life energy is directed towards ${houseMeaning[k.houseOf(ll) - 1]}.")
+            append(Lang.t(
+                "Lagna lord %s sits in %s in house %d – life energy is directed towards %s.",
+                Lang.planet(lagnaLord), Lang.sign(ll.sign), k.houseOf(ll), Lang.t(houseMeaning[k.houseOf(ll) - 1])
+            ))
         }
     }
 
     fun planetInsights(k: Kundli): String = buildString {
         for (p in k.planets) {
             val h = k.houseOf(p)
-            append("• ${p.name} in ${SIGNS[p.sign]}, house $h")
+            append(Lang.t("• %s in %s, house %d", Lang.planet(p.name), Lang.sign(p.sign), h))
             val dig = dignity(p)
-            if (dig.isNotEmpty()) append(" ($dig)")
-            append("\n  ${planetTheme[p.name]} are channelled into ${houseMeaning[h - 1]}.")
+            if (dig.isNotEmpty()) append(Lang.t(" (%s)", Lang.t(dig)))
+            append(Lang.t(
+                "\n  %s are channelled into %s.",
+                Lang.t(planetTheme.getValue(p.name)), Lang.t(houseMeaning[h - 1])
+            ))
             when (dig) {
-                "Exalted", "Own sign" -> append(" This placement is strong and supportive.")
-                "Debilitated" -> append(" This placement needs conscious effort; results improve with maturity.")
+                "Exalted", "Own sign" -> append(Lang.t(" This placement is strong and supportive."))
+                "Debilitated" -> append(Lang.t(" This placement needs conscious effort; results improve with maturity."))
             }
             append("\n")
         }
@@ -127,17 +140,20 @@ object Insights {
         val out = mutableListOf<String>()
         val mars = k.planet("Mars")
         if (k.houseOf(mars) in listOf(1, 2, 4, 7, 8, 12)) {
-            out += "Mangal Dosha: Mars in house ${k.houseOf(mars)} from the Ascendant. Compatibility with a partner's chart is worth checking."
-        } else out += "No Mangal Dosha from the Ascendant."
+            out += Lang.t(
+                "Mangal Dosha: Mars in house %d from the Ascendant. Compatibility with a partner's chart is worth checking.",
+                k.houseOf(mars)
+            )
+        } else out += Lang.t("No Mangal Dosha from the Ascendant.")
 
         val moon = k.planet("Moon")
         val jup = k.planet("Jupiter")
         if ((k.houseOf(jup) - k.houseOf(moon) + 12) % 12 in listOf(0, 3, 6, 9)) {
-            out += "Gajakesari Yoga: Jupiter in a kendra from the Moon – brings wisdom, reputation and good judgment."
+            out += Lang.t("Gajakesari Yoga: Jupiter in a kendra from the Moon – brings wisdom, reputation and good judgment.")
         }
         val sun = k.planet("Sun")
         val mer = k.planet("Mercury")
-        if (sun.sign == mer.sign) out += "Budhaditya Yoga: Sun and Mercury together – sharp intellect and communication."
+        if (sun.sign == mer.sign) out += Lang.t("Budhaditya Yoga: Sun and Mercury together – sharp intellect and communication.")
         for (n in listOf("Mars", "Jupiter", "Saturn", "Venus", "Mercury")) {
             val p = k.planet(n)
             if ((SIGN_LORDS[p.sign] == n || exalt[n] == p.sign) && k.houseOf(p) in listOf(1, 4, 7, 10)) {
@@ -145,7 +161,7 @@ object Insights {
                     "Mars" -> "Ruchaka"; "Mercury" -> "Bhadra"; "Jupiter" -> "Hamsa"
                     "Venus" -> "Malavya"; else -> "Shasha"
                 }
-                out += "$name Yoga (Pancha Mahapurusha): $n strong in a kendra – a mark of distinction."
+                out += Lang.t("%s Yoga (Pancha Mahapurusha): %s strong in a kendra – a mark of distinction.", Lang.t(name), Lang.planet(n))
             }
         }
         return out.joinToString("\n\n")
@@ -154,18 +170,26 @@ object Insights {
     fun dashaInsights(k: Kundli, now: Long, fmt: SimpleDateFormat): String = buildString {
         val cur = k.dashas.firstOrNull { now in it.startMillis until it.endMillis }
         if (cur != null) {
-            append("Current Mahadasha: ${cur.lord} (${fmt.format(Date(cur.startMillis))} – ${fmt.format(Date(cur.endMillis))})\n")
-            append(dashaText.getValue(cur.lord)).append("\n")
+            append(Lang.t(
+                "Current Mahadasha: %s (%s – %s)\n",
+                Lang.planet(cur.lord), fmt.format(Date(cur.startMillis)), fmt.format(Date(cur.endMillis))
+            ))
+            append(Lang.t(dashaText.getValue(cur.lord))).append("\n")
             val lp = k.planet(cur.lord)
-            append("${cur.lord} is in house ${k.houseOf(lp)}, so results centre on ${houseMeaning[k.houseOf(lp) - 1]}.\n\n")
+            append(Lang.t(
+                "%s is in house %d, so results centre on %s.\n\n",
+                Lang.planet(cur.lord), k.houseOf(lp), Lang.t(houseMeaning[k.houseOf(lp) - 1])
+            ))
         }
-        append("Vimshottari Mahadasha sequence:\n")
+        append(Lang.t("Vimshottari Mahadasha sequence:\n"))
         for (d in k.dashas) {
-            append("• %-8s %s – %s\n".format(d.lord, fmt.format(Date(d.startMillis)), fmt.format(Date(d.endMillis))))
+            append(Lang.t(
+                "• %s%s – %s\n",
+                Lang.pad(Lang.planet(d.lord), 9), fmt.format(Date(d.startMillis)), fmt.format(Date(d.endMillis))
+            ))
         }
     }
 
-    fun disclaimer() = "Positions: Astronomy Engine (VSOP87/ELP), Lahiri ayanamsa, mean lunar node, whole-sign houses; " +
-        "planet longitudes agree with JPL Horizons to a few arc-seconds. Interpretations are generic and for " +
-        "self-reflection only; consult a professional astrologer for important decisions."
-}
+    fun disclaimer() = Lang.t(
+        "Positions: Astronomy Engine (VSOP87/ELP), Lahiri ayanamsa, mean lunar node, whole-sign houses; planet longitudes agree with JPL Horizons to a few arc-seconds. Interpretations are generic and for self-reflection only; consult a professional astrologer for important decisions."
+    )}
