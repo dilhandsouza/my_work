@@ -1,0 +1,42 @@
+[
+  {
+    "original": "hi how are you I love you",
+    "corrected": "hi how are you? I love you",
+    "timestamp": "2026-02-21T16:04:41.260494"
+  },
+  {
+    "original": "Yaara what are you doing",
+    "corrected": "Diara what are you doing ?",
+    "timestamp": "2026-02-21T16:05:08.983745"
+  },
+  {
+    "original": "Dr what are you doing",
+    "corrected": "Diara what are you doing?",
+    "timestamp": "2026-02-21T16:05:36.873531"
+  },
+  {
+    "original": "diyara what are you doing",
+    "corrected": "diara what are you doing",
+    "timestamp": "2026-02-21T16:05:56.646202"
+  },
+  {
+    "original": "hi my name is Diana",
+    "corrected": "hi my name is Diara",
+    "timestamp": "2026-02-21T16:06:18.303027"
+  },
+  {
+    "original": "hey diyara who is your best friend",
+    "corrected": "hey diara who is your best friend",
+    "timestamp": "2026-02-21T16:06:38.707810"
+  },
+  {
+    "original": "diyara I love you",
+    "corrected": "diara I love you",
+    "timestamp": "2026-02-21T16:07:07.733273"
+  },
+  {
+    "original": "viara what are you doing",
+    "corrected": "Diara what are you doing",
+    "timestamp": "2026-02-21T16:07:30.739797"
+  }
+]

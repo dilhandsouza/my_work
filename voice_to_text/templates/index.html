@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice to Text Converter - Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 Voice to Text Converter</h1>
+            <p class="subtitle">Record your voice and convert it to text with ML learning</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Recording Controls -->
+            <div class="controls-section">
+                <div class="button-group">
+                    <button id="recordBtn" class="btn btn-primary">
+                        <span class="btn-icon">🎙️</span> Start Recording
+                    </button>
+                    <button id="stopBtn" class="btn btn-secondary" disabled>
+                        <span class="btn-icon">⏹️</span> Stop Recording
+                    </button>
+                    <button id="clearBtn" class="btn btn-danger">
+                        <span class="btn-icon">🗑️</span> Clear Text
+                    </button>
+                </div>
+                
+                <div class="language-display">
+                    <span class="language-label">🌐 Language:</span>
+                    <span class="language-value" id="languageDisplay">English</span>
+                    <button id="languageSelectorBtn" class="btn btn-small btn-info" title="Change language">
+                        <span class="btn-icon">🌍</span> Change
+                    </button>
+                </div>
+                
+                <div class="status" id="status">Ready to record</div>
+            </div>
+
+            <!-- Recording Indicator -->
+            <div id="recordingIndicator" class="recording-indicator hidden">
+                <div class="pulse"></div>
+                <span>Recording...</span>
+            </div>
+
+            <!-- ML Model Info Section -->
+            <div class="model-info-section">
+                <div class="model-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">🤖 Model Status:</span>
+                        <span class="stat-value" id="modelStatus">Loading...</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📚 Training Samples:</span>
+                        <span class="stat-value" id="trainingSamples">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">🎯 Model Accuracy:</span>
+                        <span class="stat-value" id="modelAccuracy">0%</span>
+                    </div>
+                </div>
+                <button id="exportBtn" class="btn btn-secondary btn-small" title="Export training data">
+                    <span class="btn-icon">💾</span> Export Data
+                </button>
+                <button id="importBtn" class="btn btn-secondary btn-small" title="Import training data">
+                    <span class="btn-icon">📂</span> Import Data
+                </button>
+                <button id="resetModelBtn" class="btn btn-danger btn-small" title="Reset model">
+                    <span class="btn-icon">🔄</span> Reset Model
+                </button>
+            </div>
+
+            <!-- Transcribed Text Area -->
+            <div class="text-section">
+                <label for="textOutput">Transcribed Text:</label>
+                <textarea 
+                    id="textOutput" 
+                    class="textarea" 
+                    placeholder="Your transcribed text will appear here... You can edit it as well!"
+                    rows="10"
+                ></textarea>
+                <div class="text-info">
+                    <span>Characters: <strong id="charCount">0</strong></span>
+                    <span>Words: <strong id="wordCount">0</strong></span>
+                </div>
+                
+                <!-- Correction Training Section -->
+                <div class="correction-section" id="correctionSection">
+                    <div class="correction-prompt">
+                        <p id="correctionText"></p>
+                        <div class="correction-actions">
+                            <button id="trainBtn" class="btn btn-success btn-small">
+                                <span class="btn-icon">✅</span> Save Correction
+                            </button>
+                            <button id="dismissBtn" class="btn btn-info btn-small">
+                                <span class="btn-icon">❌</span> Dismiss
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copy Button -->
+            <div class="action-buttons">
+                <button id="copyBtn" class="btn btn-info">
+                    <span class="btn-icon">📋</span> Copy to Clipboard
+                </button>
+                <button id="downloadBtn" class="btn btn-info">
+                    <span class="btn-icon">💾</span> Download as Text
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🤖 Voice to Text with Python ML Backend | Speech Recognition with Intelligent Learning</p>
+        </div>
+    </div>
+
+    <!-- Language Selector Modal -->
+    <div id="languageSelectorModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🌍 Select Language</h2>
+                <button class="modal-close" id="modalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="languageGrid" class="language-grid">
+                    <!-- Languages will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importFile" style="display: none;" accept=".json">
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
