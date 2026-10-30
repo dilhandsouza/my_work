@@ -1,0 +1,278 @@
+{
+  "Logistic Regression": {
+    "accuracy": 0.9825,
+    "auc": 0.9954,
+    "precision": 0.9861,
+    "recall": 0.9861,
+    "f1": 0.9861,
+    "mcc": 0.9623,
+    "confusion_matrix": [
+      [
+        41,
+        1
+      ],
+      [
+        1,
+        71
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.9761904761904762,
+        "recall": 0.9761904761904762,
+        "f1-score": 0.9761904761904762,
+        "support": 42.0
+      },
+      "1": {
+        "precision": 0.9861111111111112,
+        "recall": 0.9861111111111112,
+        "f1-score": 0.9861111111111112,
+        "support": 72.0
+      },
+      "accuracy": 0.9824561403508771,
+      "macro avg": {
+        "precision": 0.9811507936507937,
+        "recall": 0.9811507936507937,
+        "f1-score": 0.9811507936507937,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9824561403508771,
+        "recall": 0.9824561403508771,
+        "f1-score": 0.9824561403508771,
+        "support": 114.0
+      }
+    },
+    "observation": "Top-tier performer on this dataset with very strong discrimination and stable error balance."
+  },
+  "Decision Tree": {
+    "accuracy": 0.9035,
+    "auc": 0.9358,
+    "precision": 0.942,
+    "recall": 0.9028,
+    "f1": 0.922,
+    "mcc": 0.7969,
+    "confusion_matrix": [
+      [
+        38,
+        4
+      ],
+      [
+        7,
+        65
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.8444444444444444,
+        "recall": 0.9047619047619048,
+        "f1-score": 0.8735632183908046,
+        "support": 42.0
+      },
+      "1": {
+        "precision": 0.9420289855072463,
+        "recall": 0.9027777777777778,
+        "f1-score": 0.9219858156028369,
+        "support": 72.0
+      },
+      "accuracy": 0.9035087719298246,
+      "macro avg": {
+        "precision": 0.8932367149758453,
+        "recall": 0.9037698412698413,
+        "f1-score": 0.8977745169968208,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9060767861683193,
+        "recall": 0.9035087719298246,
+        "f1-score": 0.904145911366825,
+        "support": 114.0
+      }
+    },
+    "observation": "Makes more conservative predictions with fewer false positives, but misses some positive cases."
+  },
+  "kNN": {
+    "accuracy": 0.9737,
+    "auc": 0.9934,
+    "precision": 0.96,
+    "recall": 1.0,
+    "f1": 0.9796,
+    "mcc": 0.9442,
+    "confusion_matrix": [
+      [
+        39,
+        3
+      ],
+      [
+        0,
+        72
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 1.0,
+        "recall": 0.9285714285714286,
+        "f1-score": 0.9629629629629629,
+        "support": 42.0
+      },
+      "1": {
+        "precision": 0.96,
+        "recall": 1.0,
+        "f1-score": 0.9795918367346939,
+        "support": 72.0
+      },
+      "accuracy": 0.9736842105263158,
+      "macro avg": {
+        "precision": 0.98,
+        "recall": 0.9642857142857143,
+        "f1-score": 0.9712773998488284,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9747368421052632,
+        "recall": 0.9736842105263158,
+        "f1-score": 0.9734654095556351,
+        "support": 114.0
+      }
+    },
+    "observation": "Captures more positive-class cases, but trades precision for recall with more false positives."
+  },
+  "Naive Bayes": {
+    "accuracy": 0.9386,
+    "auc": 0.9878,
+    "precision": 0.9452,
+    "recall": 0.9583,
+    "f1": 0.9517,
+    "mcc": 0.8676,
+    "confusion_matrix": [
+      [
+        38,
+        4
+      ],
+      [
+        3,
+        69
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.926829268292683,
+        "recall": 0.9047619047619048,
+        "f1-score": 0.9156626506024096,
+        "support": 42.0
+      },
+      "1": {
+        "precision": 0.9452054794520548,
+        "recall": 0.9583333333333334,
+        "f1-score": 0.9517241379310345,
+        "support": 72.0
+      },
+      "accuracy": 0.9385964912280702,
+      "macro avg": {
+        "precision": 0.9360173738723689,
+        "recall": 0.9315476190476191,
+        "f1-score": 0.933693394266722,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9384352963933389,
+        "recall": 0.9385964912280702,
+        "f1-score": 0.9384383268099622,
+        "support": 114.0
+      }
+    },
+    "observation": "Captures more positive-class cases, but trades precision for recall with more false positives."
+  },
+  "Random Forest (Ensemble)": {
+    "accuracy": 0.9561,
+    "auc": 0.9944,
+    "precision": 0.9589,
+    "recall": 0.9722,
+    "f1": 0.9655,
+    "mcc": 0.9054,
+    "confusion_matrix": [
+      [
+        39,
+        3
+      ],
+      [
+        2,
+        70
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.9512195121951219,
+        "recall": 0.9285714285714286,
+        "f1-score": 0.9397590361445783,
+        "support": 42.0
+      },
+      "1": {
+        "precision": 0.958904109589041,
+        "recall": 0.9722222222222222,
+        "f1-score": 0.9655172413793104,
+        "support": 72.0
+      },
+      "accuracy": 0.956140350877193,
+      "macro avg": {
+        "precision": 0.9550618108920814,
+        "recall": 0.9503968253968254,
+        "f1-score": 0.9526381387619444,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9560729421281235,
+        "recall": 0.956140350877193,
+        "f1-score": 0.9560273762928302,
+        "support": 114.0
+      }
+    },
+    "observation": "Captures more positive-class cases, but trades precision for recall with more false positives."
+  },
+  "Support Vector Machine": {
+    "accuracy": 0.9825,
+    "auc": 0.995,
+    "precision": 0.9861,
+    "recall": 0.9861,
+    "f1": 0.9861,
+    "mcc": 0.9623,
+    "confusion_matrix": [
+      [
+        41,
+        1
+      ],
+      [
+        1,
+        71
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.9761904761904762,
+        "recall": 0.9761904761904762,
+        "f1-score": 0.9761904761904762,
+        "support": 42.0
+      },
+      "1": {
+        "precision": 0.9861111111111112,
+        "recall": 0.9861111111111112,
+        "f1-score": 0.9861111111111112,
+        "support": 72.0
+      },
+      "accuracy": 0.9824561403508771,
+      "macro avg": {
+        "precision": 0.9811507936507937,
+        "recall": 0.9811507936507937,
+        "f1-score": 0.9811507936507937,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9824561403508771,
+        "recall": 0.9824561403508771,
+        "f1-score": 0.9824561403508771,
+        "support": 114.0
+      }
+    },
+    "observation": "Top-tier performer on this dataset with very strong discrimination and stable error balance."
+  }
+}

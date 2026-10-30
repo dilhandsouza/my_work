@@ -1,0 +1,197 @@
+{
+ "Mumbai 1990-05-15 04:30": {
+  "Sun": {
+   "sthana": 2.67,
+   "kala": 2.81,
+   "dig": 0.3,
+   "cheshta": 0.0,
+   "naisargika": 1.0,
+   "drik": -0.3,
+   "total": 6.48
+  },
+  "Moon": {
+   "sthana": 2.17,
+   "kala": 2.01,
+   "dig": 0.01,
+   "cheshta": 0.0,
+   "naisargika": 0.86,
+   "drik": 0.24,
+   "total": 5.29
+  },
+  "Mars": {
+   "sthana": 3.73,
+   "kala": 2.26,
+   "dig": 1.33,
+   "cheshta": 1.53,
+   "naisargika": 0.29,
+   "drik": 0.12,
+   "total": 9.25
+  },
+  "Mercury": {
+   "sthana": 4.07,
+   "kala": 3.12,
+   "dig": 0.93,
+   "cheshta": 1.23,
+   "naisargika": 0.43,
+   "drik": -0.35,
+   "total": 9.42
+  },
+  "Jupiter": {
+   "sthana": 3.21,
+   "kala": 3.63,
+   "dig": 0.59,
+   "cheshta": 0.27,
+   "naisargika": 0.57,
+   "drik": -0.27,
+   "total": 8.0
+  },
+  "Venus": {
+   "sthana": 3.33,
+   "kala": 2.04,
+   "dig": 0.46,
+   "cheshta": 0.53,
+   "naisargika": 0.71,
+   "drik": -0.42,
+   "total": 6.66
+  },
+  "Saturn": {
+   "sthana": 4.23,
+   "kala": 1.31,
+   "dig": 1.5,
+   "cheshta": 1.33,
+   "naisargika": 0.14,
+   "drik": 0.22,
+   "total": 8.73
+  }
+ },
+ "Delhi 1985-11-02 14:15": {
+  "Sun": {
+   "sthana": 2.16,
+   "kala": 1.72,
+   "dig": 0.82,
+   "cheshta": 0.0,
+   "naisargika": 1.0,
+   "drik": -0.04,
+   "total": 5.67
+  },
+  "Moon": {
+   "sthana": 2.88,
+   "kala": 0.74,
+   "dig": 0.9,
+   "cheshta": 0.0,
+   "naisargika": 0.86,
+   "drik": -0.32,
+   "total": 5.05
+  },
+  "Mars": {
+   "sthana": 2.05,
+   "kala": 0.93,
+   "dig": 0.62,
+   "cheshta": 0.27,
+   "naisargika": 0.29,
+   "drik": -0.04,
+   "total": 4.11
+  },
+  "Mercury": {
+   "sthana": 3.8,
+   "kala": 2.22,
+   "dig": 0.5,
+   "cheshta": 0.57,
+   "naisargika": 0.43,
+   "drik": -0.04,
+   "total": 7.48
+  },
+  "Jupiter": {
+   "sthana": 1.4,
+   "kala": 4.15,
+   "dig": 0.87,
+   "cheshta": 0.53,
+   "naisargika": 0.57,
+   "drik": -0.69,
+   "total": 6.84
+  },
+  "Venus": {
+   "sthana": 3.19,
+   "kala": 1.87,
+   "dig": 0.28,
+   "cheshta": 0.19,
+   "naisargika": 0.71,
+   "drik": 0.08,
+   "total": 6.32
+  },
+  "Saturn": {
+   "sthana": 3.33,
+   "kala": 3.13,
+   "dig": 0.52,
+   "cheshta": 0.08,
+   "naisargika": 0.14,
+   "drik": -0.02,
+   "total": 7.18
+  }
+ },
+ "Chennai 2000-01-01 22:10": {
+  "Sun": {
+   "sthana": 2.37,
+   "kala": 1.38,
+   "dig": 0.16,
+   "cheshta": 0.0,
+   "naisargika": 1.0,
+   "drik": 0.06,
+   "total": 4.97
+  },
+  "Moon": {
+   "sthana": 2.56,
+   "kala": 3.07,
+   "dig": 0.85,
+   "cheshta": 0.0,
+   "naisargika": 0.86,
+   "drik": -0.12,
+   "total": 7.22
+  },
+  "Mars": {
+   "sthana": 4.97,
+   "kala": 2.77,
+   "dig": 0.42,
+   "cheshta": 0.33,
+   "naisargika": 0.29,
+   "drik": -0.29,
+   "total": 8.48
+  },
+  "Mercury": {
+   "sthana": 2.47,
+   "kala": 2.94,
+   "dig": 0.38,
+   "cheshta": 0.06,
+   "naisargika": 0.43,
+   "drik": 0.06,
+   "total": 6.35
+  },
+  "Jupiter": {
+   "sthana": 3.85,
+   "kala": 2.18,
+   "dig": 1.76,
+   "cheshta": 1.39,
+   "naisargika": 0.57,
+   "drik": -0.41,
+   "total": 9.35
+  },
+  "Venus": {
+   "sthana": 3.6,
+   "kala": 1.54,
+   "dig": 0.94,
+   "cheshta": 0.42,
+   "naisargika": 0.71,
+   "drik": -0.09,
+   "total": 7.13
+  },
+  "Saturn": {
+   "sthana": 1.46,
+   "kala": 2.46,
+   "dig": 0.67,
+   "cheshta": 1.31,
+   "naisargika": 0.14,
+   "drik": -0.46,
+   "total": 5.58
+  }
+ }
+}
